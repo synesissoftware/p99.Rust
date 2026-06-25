@@ -264,7 +264,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p50(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 1) / 2;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -279,7 +278,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p75(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 3) / 4;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -294,7 +292,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p90(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 90) / 100;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -309,7 +306,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p95(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 95) / 100;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -324,7 +320,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 99) / 100;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -339,7 +334,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_5(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 995) / 1_000;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -354,7 +348,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_9(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 999) / 1_000;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -369,7 +362,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_99(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 9_999) / 10_000;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -384,7 +376,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_999(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 99_999) / 100_000;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -399,7 +390,6 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_999_9(&self) -> Option<u64> {
-
         let target_rank = (self.event_count as u128 * 999_999) / 1_000_000;
         let r = self.value_at_target_rank_impl(target_rank as u64);
 
@@ -598,6 +588,11 @@ mod tests {
     #![cfg_attr(debug_assertions, allow(unused_imports))]
 
     use super::Histogram;
+
+    use test_helpers::{
+        assert_scalar_eq_approx,
+        multiplier,
+    };
 
     use std::time as std_time;
 
@@ -859,5 +854,57 @@ mod tests {
         assert!(p99_9 <= p99_99);
         assert!(p99_99 <= p99_999);
         assert!(p99_999 <= p99_999_9);
+    }
+
+    #[test]
+    fn TEST_Histogram_COMPARE_FLOAT_AND_INT_PERCENTILES() {
+        let mut h = Histogram::default();
+
+        // Push some values representing a realistic latency distribution
+        for i in 1..=10_000 {
+            let val = (i * i) % 1_000_000;
+            assert!(h.push_event_time_ns(val as u64));
+        }
+
+        // Compare float vs int percentiles
+        let float_p50 = h.value_at_percentile(50.0).unwrap();
+        let int_p50 = h.value_at_p50().unwrap();
+        assert_scalar_eq_approx!(float_p50 as f64, int_p50 as f64, multiplier(0.01));
+
+        let float_p75 = h.value_at_percentile(75.0).unwrap();
+        let int_p75 = h.value_at_p75().unwrap();
+        assert_scalar_eq_approx!(float_p75 as f64, int_p75 as f64, multiplier(0.01));
+
+        let float_p90 = h.value_at_percentile(90.0).unwrap();
+        let int_p90 = h.value_at_p90().unwrap();
+        assert_scalar_eq_approx!(float_p90 as f64, int_p90 as f64, multiplier(0.01));
+
+        let float_p95 = h.value_at_percentile(95.0).unwrap();
+        let int_p95 = h.value_at_p95().unwrap();
+        assert_scalar_eq_approx!(float_p95 as f64, int_p95 as f64, multiplier(0.01));
+
+        let float_p99 = h.value_at_percentile(99.0).unwrap();
+        let int_p99 = h.value_at_p99().unwrap();
+        assert_scalar_eq_approx!(float_p99 as f64, int_p99 as f64, multiplier(0.01));
+
+        let float_p99_5 = h.value_at_percentile(99.5).unwrap();
+        let int_p99_5 = h.value_at_p99_5().unwrap();
+        assert_scalar_eq_approx!(float_p99_5 as f64, int_p99_5 as f64, multiplier(0.01));
+
+        let float_p99_9 = h.value_at_percentile(99.9).unwrap();
+        let int_p99_9 = h.value_at_p99_9().unwrap();
+        assert_scalar_eq_approx!(float_p99_9 as f64, int_p99_9 as f64, multiplier(0.01));
+
+        let float_p99_99 = h.value_at_percentile(99.99).unwrap();
+        let int_p99_99 = h.value_at_p99_99().unwrap();
+        assert_scalar_eq_approx!(float_p99_99 as f64, int_p99_99 as f64, multiplier(0.01));
+
+        let float_p99_999 = h.value_at_percentile(99.999).unwrap();
+        let int_p99_999 = h.value_at_p99_999().unwrap();
+        assert_scalar_eq_approx!(float_p99_999 as f64, int_p99_999 as f64, multiplier(0.01));
+
+        let float_p99_999_9 = h.value_at_percentile(99.9999).unwrap();
+        let int_p99_999_9 = h.value_at_p99_999_9().unwrap();
+        assert_scalar_eq_approx!(float_p99_999_9 as f64, int_p99_999_9 as f64, multiplier(0.01));
     }
 }

@@ -39,6 +39,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
+name = "base-traits"
+version = "0.0.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9bb2de59cca22f51f3301a09c549b0b4a32f56e8a007d0d44b02a1ce42975b37"
+
+[[package]]
 name = "cast"
 version = "0.3.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -221,6 +227,7 @@ name = "p99"
 version = "0.0.1"
 dependencies = [
  "criterion",
+ "test_help-rs",
 ]
 
 [[package]]
@@ -347,6 +354,15 @@ dependencies = [
  "proc-macro2",
  "quote",
  "unicode-ident",
+]
+
+[[package]]
+name = "test_help-rs"
+version = "0.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c7d2df2cc6a57f53f03c47cc937df746b8f2d0f5e63b77b7d81aa30b9ceb2842"
+dependencies = [
+ "base-traits",
 ]
 
 [[package]]
