@@ -61,7 +61,7 @@ Low-cost generation of performance percentiles (p50, p90, p99, p99.9, etc.).
 
 ### Performance Claims
 
-*   **Zero Allocation**: `Histogram` does not allocate memory on the heap during creation, event insertion, or percentile queries. It is a compact (~512-byte) structure that can reside entirely on the stack or be embedded in other structures.
+*   **Zero Allocation**: `Histogram` does not allocate memory on the heap during creation, event insertion, or percentile queries. It is a compact (~576-byte) structure that can reside entirely on the stack or be embedded in other structures.
 *   **Ultra-Low Latency Insertion**: Recording a latency measurement (`push_event_time_ns`) takes approximately **11 nanoseconds** (about 35 CPU cycles on modern hardware).
 *   **Blazing-Fast Queries**: Querying percentiles (such as `value_at_p99()`) takes only **11 to 17 nanoseconds**, depending on the distribution of events across the buckets.
 *   **Instruction-Cache Friendly**: The query methods are designed with a "thin caller / heavy worker" pattern to prevent instruction-cache bloat and maintain high CPU cache locality under real-world workloads.
@@ -133,7 +133,7 @@ use p99::Histogram;
 use std::time::Duration;
 
 fn main() {
-    // 1. Initialize a default histogram (zero-allocated, ~512 bytes on the stack)
+    // 1. Initialize a default histogram (zero-allocated, ~576 bytes on the stack)
     let mut histogram = Histogram::default();
 
     // 2. Record event times using various units
