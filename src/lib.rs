@@ -1,6 +1,10 @@
 // src/lib.rs : `Histogram`
 
-use std::time as std_time;
+#[rustfmt::skip]
+use std::{
+    fmt as std_fmt,
+    time as std_time,
+};
 
 /// Low-cost performance percentile histogram using 64-buckets.
 ///
@@ -9,7 +13,6 @@ use std::time as std_time;
 /// 64 logarithmic power-of-two spacing buckets. This is extremely efficient
 /// and suited for high-frequency low-overhead timing measurements.
 #[derive(Clone)]
-#[derive(Debug)]
 pub struct Histogram {
     event_count: usize,
 
@@ -399,6 +402,65 @@ impl Histogram {
 
 // Trait implementations
 
+impl std_fmt::Debug for Histogram {
+    fn fmt(
+        &self,
+        f: &mut std_fmt::Formatter<'_>,
+    ) -> std_fmt::Result {
+        struct BucketsDebug<'a>(&'a [u64; 64], bool);
+
+        impl std_fmt::Debug for BucketsDebug<'_> {
+            fn fmt(
+                &self,
+                f: &mut std_fmt::Formatter<'_>,
+            ) -> std_fmt::Result {
+                struct PowerOfTwoKey(usize);
+
+                impl std_fmt::Debug for PowerOfTwoKey {
+                    fn fmt(
+                        &self,
+                        f: &mut std_fmt::Formatter<'_>,
+                    ) -> std_fmt::Result {
+                        write!(f, "\"2^{}\"", self.0)
+                    }
+                }
+
+                let mut m = f.debug_map();
+                for (i, &count) in self.0.iter().enumerate() {
+                    if count > 0 {
+                        if self.1 {
+                            m.entry(&PowerOfTwoKey(i), &count);
+                        } else {
+                            m.entry(&i, &count);
+                        }
+                    }
+                }
+                m.finish()
+            }
+        }
+
+        if f.alternate() {
+            f.debug_struct("Histogram")
+                .field("event_count", &self.event_count)
+                .field("event_time_total", &self.event_time_total())
+                .field("has_overflowed", &self.has_overflowed)
+                .field("min_event_time", &self.min_event_time)
+                .field("max_event_time", &self.max_event_time)
+                .field("buckets", &BucketsDebug(&self.buckets, true))
+                .finish()
+        } else {
+            f.debug_struct("Histogram")
+                .field("n", &self.event_count)
+                .field("∑", &self.event_time_total())
+                .field("∞", &self.has_overflowed)
+                .field("↓", &self.min_event_time)
+                .field("↑", &self.max_event_time)
+                .field("b", &BucketsDebug(&self.buckets, false))
+                .finish()
+        }
+    }
+}
+
 impl Default for Histogram {
     fn default() -> Self {
         Self {
@@ -589,12 +651,87 @@ mod tests {
 
     use super::Histogram;
 
+    #[rustfmt::skip]
     use test_helpers::{
         assert_scalar_eq_approx,
         multiplier,
     };
 
     use std::time as std_time;
+
+    #[test]
+    fn TEST_Histogram_Debug() {
+
+        // empty
+        {
+            let h = Histogram::default();
+
+            let expected = "Histogram { n: 0, ∑: Some(0), ∞: false, ↓: None, ↑: None, b: {} }";
+            assert_eq!(expected, format!("{:?}", h));
+        }
+
+        // populated
+        {
+            let mut h = Histogram::default();
+
+            let expected = "Histogram { n: 3, ∑: Some(500), ∞: false, ↓: Some(100), ↑: Some(200), b: {6: 1, 7: 2} }";
+
+            assert!(h.push_event_time_ns(100)); // bucket 6
+            assert!(h.push_event_time_ns(200)); // bucket 7
+            assert!(h.push_event_time_ns(200)); // bucket 7
+
+            assert_eq!(expected, format!("{:?}", h));
+        }
+    }
+
+    #[test]
+    fn TEST_Histogram_Debug_alternate() {
+
+        // empty
+        {
+            let h = Histogram::default();
+
+            let expected = r#"Histogram {
+    event_count: 0,
+    event_time_total: Some(
+        0,
+    ),
+    has_overflowed: false,
+    min_event_time: None,
+    max_event_time: None,
+    buckets: {},
+}"#;
+            assert_eq!(expected, format!("{:#?}", h));
+        }
+
+        // populated
+        {
+            let mut h = Histogram::default();
+
+            assert!(h.push_event_time_ns(100)); // bucket 6
+            assert!(h.push_event_time_ns(10_000)); // bucket 13
+            assert!(h.push_event_time_ns(10_001)); // bucket 13
+
+            let expected = r#"Histogram {
+    event_count: 3,
+    event_time_total: Some(
+        20101,
+    ),
+    has_overflowed: false,
+    min_event_time: Some(
+        100,
+    ),
+    max_event_time: Some(
+        10001,
+    ),
+    buckets: {
+        "2^6": 1,
+        "2^13": 2,
+    },
+}"#;
+            assert_eq!(expected, format!("{:#?}", h));
+        }
+    }
 
     #[test]
     fn TEST_Histogram_Default() {

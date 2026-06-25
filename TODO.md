@@ -8,6 +8,6 @@
 
 ## TODOs
 
-- [ ] `Debug` form;
+- [x] ~~~`Debug` form~~~;
 - [ ] binary scaling;
 
