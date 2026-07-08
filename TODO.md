@@ -1,13 +1,26 @@
-# p99.Rust <!-- omit in toc -->
+# p99.Rust - TODO <!-- omit in toc -->
 
 
 ## Table of Contents <!-- omit in toc -->
 
-- [TODOs](#todos)
+- [Functional improvements](#functional-improvements)
+- [Performance improvements](#performance-improvements)
+- [Packaging improvements](#packaging-improvements)
 
 
-## TODOs
+## Functional improvements
 
-- [x] ~~~`Debug` form~~~;
-- [ ] binary scaling;
+* [x] ~~~`Debug` form~~~ - ✅;
 
+
+## Performance improvements
+
+* [ ] binary scaling;
+
+
+## Packaging improvements
+
+* \<none>
+
+
+<!-- ########################### end of file ########################### -->
