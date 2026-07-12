@@ -295,8 +295,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p90(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 90) / 100;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 3_865_470_566) >> 32) as u64; // multiplier: 0.8999999999068677
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 90) / 100) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -309,8 +314,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p95(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 95) / 100;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_080_218_931) >> 32) as u64; // multiplier: 0.9499999999534339
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 95) / 100) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -323,8 +333,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 99) / 100;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_252_017_623) >> 32) as u64; // multiplier: 0.9899999999906868
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 99) / 100) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -337,8 +352,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_5(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 995) / 1_000;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_273_492_460) >> 32) as u64; // multiplier: 0.9950000001117587
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 995) / 1_000) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -351,8 +371,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_9(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 999) / 1_000;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_290_672_329) >> 32) as u64; // multiplier: 0.9990000000689179
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 999) / 1_000) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -365,8 +390,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_99(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 9_999) / 10_000;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_294_537_799) >> 32) as u64; // multiplier: 0.9998999999370426
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 9_999) / 10_000) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -379,8 +409,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_999(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 99_999) / 100_000;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_294_924_346) >> 32) as u64; // multiplier: 0.9999899999238551
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 99_999) / 100_000) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
@@ -393,8 +428,13 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     #[inline(always)]
     pub fn value_at_p99_999_9(&self) -> Option<u64> {
-        let target_rank = (self.event_count as u128 * 999_999) / 1_000_000;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
+        #[cfg(feature = "binary-scaling")]
+        let target_rank = ((self.event_count as u128 * 4_294_963_001) >> 32) as u64; // multiplier: 0.9999989999923855
+
+        #[cfg(not(feature = "binary-scaling"))]
+        let target_rank = ((self.event_count as u128 * 999_999) / 1_000_000) as u64;
+
+        let r = self.value_at_target_rank_impl(target_rank);
 
         r
     }
