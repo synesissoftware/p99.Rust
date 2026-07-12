@@ -3,7 +3,7 @@
 
 ## 0.0.3 - 14th July 2026
 
-* T.B.C.;
+* standardised project boilerplate: (**.gitattributes**, **.gitignore**, **.vimrc**, **.vscode/settings.json**); project files (**CHANGES.md**, **EXAMPLES.md**, **NEWS.md**, **README.md**, **TODO.md**);
 
 
 ## 0.0.2 - 13th July 2026
