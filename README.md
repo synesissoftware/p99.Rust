@@ -106,9 +106,10 @@ No public enumerations are defined at this time.
 
 The following crate features are available:
 
-* **`binary-scaling`** *(opt-in)*: Replaces integer division in the integer-based percentile methods (`value_at_p90()`, `value_at_p95()`, `value_at_p99()`, etc.) with $2^{32}$ fixed-point binary scaling. Each percentile multiplier (e.g., `0.90` for p90) is pre-encoded as a `u32` constant and the target rank is computed via a single multiplication and a 32-bit right-shift, avoiding the cost of integer division entirely. This yields a **~1.5x to 2x speedup** for percentile queries with a negligible loss of accuracy (the scaled multiplier differs from the true value by less than $10^{-9}$). The generic `value_at_percentile(f64)` method is unaffected by this feature;
+* **`"binary-scaling"`** *(opt-in)*: Replaces integer division in the integer-based percentile methods (`#value_at_p90()`, `#value_at_p95()`, `#value_at_p99()`, etc.) with $2^{32}$ fixed-point binary scaling. Each percentile multiplier (e.g., `0.90` for p90) is pre-encoded as a `u32` constant and the target rank is computed via a single multiplication and a 32-bit right-shift, avoiding the cost of integer division entirely. This yields a **~1.5x to 2x speedup** for percentile queries with a negligible loss of accuracy (the scaled multiplier differs from the true value by less than $10^{-9}$). The generic `#value_at_percentile(f64)` method is unaffected by this feature;
 
-* **`null-feature`** *(opt-in)*: A no-op feature that has no effect on the compiled library. It exists to simplify driver scripts and CI pipelines that conditionally pass `--features` flags, allowing a feature list to always be present even when no real features are needed;
+* **`"null-feature"`** *(opt-in)*: A no-op feature that has no effect on the compiled library. It exists to simplify driver scripts and CI pipelines that conditionally pass `--features` flags, allowing a feature list to always be present even when no real features are needed;
+
 
 #### Enabling `binary-scaling`
 
