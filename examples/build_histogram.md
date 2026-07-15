@@ -1,3 +1,12 @@
+# `build_histogram.rs`
+
+This example demonstrates the usage of the `Histogram` struct from the `p99` crate to measure and display event durations.
+
+The program simulates a series of events, each with a random delay, and records their durations using a `Histogram` instance. After all events are processed, it prints the histogram in a detailed format and also calculates and displays various percentiles (p50, p75, p90, p95, p99, p99.5, p99.9, p99.99) of the recorded durations.
+
+The number of tries (simulated events) can be controlled by setting the `P99_TRIES` environment variable. If not set, it defaults to 100.
+
+```rust
 // examples/build_histogram.rs : example program showing `Histogram`
 
 use p99::Histogram;
@@ -96,3 +105,57 @@ fn main() {
     println!("  p99.9 (integer):  {:?} ns", histogram.value_at_p99_9());
     println!("  p99.99 (integer): {:?} ns", histogram.value_at_p99_99());
 }
+```
+
+Example output:
+
+```
+$ P99_RANGE=1000000 P99_TRIES=10000 cargo run --release --example build_histogram
+    Finished `release` profile [optimized] target(s) in 0.09s
+     Running `target/release/examples/build_histogram`
+Running Histogram example with 10000 tries...
+
+Histogram printed via `{:#?}` format:
+
+Histogram {
+    event_count: 10000,
+    event_time_total: Some(
+        5009212642,
+    ),
+    has_overflowed: false,
+    min_event_time: Some(
+        125,
+    ),
+    max_event_time: Some(
+        2332375,
+    ),
+    buckets: {
+        "2^6": 1,
+        "2^7": 4,
+        "2^8": 4,
+        "2^9": 6,
+        "2^10": 14,
+        "2^11": 23,
+        "2^12": 49,
+        "2^13": 87,
+        "2^14": 166,
+        "2^15": 306,
+        "2^16": 658,
+        "2^17": 1284,
+        "2^18": 2627,
+        "2^19": 4770,
+        "2^21": 1,
+    },
+}
+
+Percentiles (approximated):
+  p50 (f64):        Some(501436) ns
+  p50 (integer):    Some(501435) ns
+  p75 (integer):    Some(773901) ns
+  p90 (integer):    Some(938771) ns
+  p95 (integer):    Some(993728) ns
+  p99 (integer):    Some(1037693) ns
+  p99.5 (integer):  Some(1043189) ns
+  p99.9 (integer):  Some(1047585) ns
+  p99.99 (integer): Some(1048575) ns
+```

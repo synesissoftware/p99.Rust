@@ -24,7 +24,7 @@ license = "BSD-3-Clause"
 name = "p99"
 readme = "README.md"
 repository = "https://github.com/synesissoftware/p99.Rust"
-version = "0.0.2"
+version = "0.0.3"
 
 
 # ##########################################################

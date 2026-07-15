@@ -2,6 +2,8 @@
 # directories (by name)
 
 /_build/
+/_build-ci/
+/scripts/__pycache__/
 /scratch/
 /target/
 
@@ -13,8 +15,6 @@
 
 .DS_Store
 
-#Cargo.lock
-
 
 # files (by pattern)
 
@@ -24,3 +24,4 @@
 *.swp
 *.tmp
 *.zip
+
