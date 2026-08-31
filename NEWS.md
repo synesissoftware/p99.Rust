@@ -1,4 +1,4 @@
-# p99.Rust - NEWS <!-- omit in toc -->
+# p99.Rust - News <!-- omit in toc -->
 
 | Date                  | News Item                                 |
 | --------------------- | ----------------------------------------- |

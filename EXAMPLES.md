@@ -1,4 +1,4 @@
-# p99.Rust Examples <!-- omit it toc -->
+# p99.Rust - Examples <!-- omit in toc -->
 
 
 |Name|Source & Description|Summary|
