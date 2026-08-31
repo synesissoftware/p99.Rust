@@ -10,13 +10,13 @@
 
 ## Functional improvements
 
-- [x] ~~~`Debug` form~~~;
-- [x] ~~~binary scaling~~~;
+* [x] ~~~`Debug` form~~~;
+* [x] ~~~binary scaling~~~;
 
 
 ## Performance improvements
 
-- [x] ~~~binary scaling~~~;
+* [x] ~~~binary scaling~~~;
 
 
 ## Packaging improvements

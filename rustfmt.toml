@@ -1,13 +1,15 @@
 
 # rustfmt.toml for p99 (p99.Rust)
 #
-# Requires nightly rustfmt with unstable features enabled, e.g.:
+# Requires the pinned nightly rustfmt toolchain used by scripts/fmt:
 #
 #   ./scripts/fmt
 #
 # Or:
 #
-#   RUSTFMT="$(rustup which --toolchain nightly rustfmt)" cargo fmt -- --unstable-features
+#   RUSTFMT="$(rustup which --toolchain nightly-2026-08-08 rustfmt)" cargo fmt -- --unstable-features
+#
+# The wrapper uses nightly-2026-08-08 by default.
 #
 # Based on rustfmt.toml circa cargo-fmt 1.4.37 era.
 # edition/style_edition updated for Rust 2021.

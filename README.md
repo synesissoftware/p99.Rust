@@ -1,12 +1,15 @@
 # p99.Rust <!-- omit in toc -->
 
+Low-cost generation of performance percentiles (p50, p90, p99, p99.9, etc.).
+
 ![Language](https://img.shields.io/badge/Rust-000000?style=flat&logo=rust&logoColor=white)
 [![License](https://img.shields.io/badge/License-BSD_3--Clause-blue.svg)](https://opensource.org/licenses/BSD-3-Clause)
+[![Crates.io](https://img.shields.io/crates/v/p99.svg)](https://crates.io/crates/p99)
 [![GitHub release](https://img.shields.io/github/v/release/synesissoftware/p99.Rust.svg)](https://github.com/synesissoftware/p99.Rust/releases/latest)
 [![Last Commit](https://img.shields.io/github/last-commit/synesissoftware/p99.Rust)](https://github.com/synesissoftware/p99.Rust/commits/master)
-[![Crates.io](https://img.shields.io/crates/v/p99.svg)](https://crates.io/crates/p99)
-
-Low-cost generation of performance percentiles (p50, p90, p99, p99.9, etc.).
+[![MSRV](https://img.shields.io/badge/MSRV-1.74-lightgrey)](https://github.com/rust-lang/rust/releases/tag/1.74.0)
+[![CI](https://github.com/synesissoftware/p99.Rust/actions/workflows/ci.yml/badge.svg)](https://github.com/synesissoftware/p99.Rust/actions/workflows/ci.yml)
+[![docs.rs](https://docs.rs/p99/badge.svg)](https://docs.rs/p99)
 
 
 ## Table of Contents <!-- omit in toc -->
@@ -35,7 +38,7 @@ Low-cost generation of performance percentiles (p50, p90, p99, p99.9, etc.).
   - [Where to get help](#where-to-get-help)
   - [Contribution guidelines](#contribution-guidelines)
   - [Dependencies](#dependencies)
-    - [Dev Dependencies](#dev-dependencies)
+    - [Development Dependencies](#development-dependencies)
   - [License](#license)
 
 
@@ -64,9 +67,12 @@ Low-cost generation of performance percentiles (p50, p90, p99, p99.9, etc.).
 ### Performance Claims
 
 *   **Zero Allocation**: `Histogram` does not allocate memory on the heap during creation, event insertion, or percentile queries. It is a compact (~576-byte) structure that can reside entirely on the stack or be embedded in other structures.
-*   **Ultra-Low Latency Insertion**: Recording a latency measurement (`push_event_time_ns`) takes approximately **11 nanoseconds** (about 35 CPU cycles on modern hardware).
-*   **Blazing-Fast Queries**: Querying percentiles (such as `value_at_p99()`) takes only **11 to 17 nanoseconds**, depending on the distribution of events across the buckets.
+*   **Low-Latency Operations**: The fixed bucket layout is designed for low-latency insertion and percentile queries. Actual timings depend on the processor, compiler, build profile, and workload.
 *   **Instruction-Cache Friendly**: The query methods are designed with a "thin caller / heavy worker" pattern to prevent instruction-cache bloat and maintain high CPU cache locality under real-world workloads.
+
+The statements above describe implementation characteristics or design goals,
+not guaranteed timings. Measured results from the checked-in Criterion
+benchmark are reported below.
 
 ### Trade-offs & Sacrifices
 
@@ -77,16 +83,16 @@ Low-cost generation of performance percentiles (p50, p90, p99, p99.9, etc.).
 
 ## Installation
 
-Reference in **Cargo.toml** in the usual way:
+Reference the current release in **Cargo.toml** in the usual way:
 
 ```toml
-p99 = { version = "0" }
+p99 = { version = "0.0.3" }
 ```
 
 To enable the optional binary-scaling optimization:
 
 ```toml
-p99 = { version = "0", features = ["binary-scaling"] }
+p99 = { version = "0.0.3", features = ["binary-scaling"] }
 ```
 
 
@@ -117,7 +123,7 @@ Add the feature in your **Cargo.toml**:
 
 ```toml
 [dependencies]
-p99 = { version = "0", features = ["binary-scaling"] }
+p99 = { version = "0.0.3", features = ["binary-scaling"] }
 ```
 
 Or, when building from the command line:
@@ -132,7 +138,17 @@ cargo run --example build_histogram --features binary-scaling
 
 #### Benchmark Results
 
-Measured with [**criterion**](https://github.com/bheisler/criterion.rs) on 100k events (Apple M-series, release profile). Only the integer-based percentile methods are affected; the generic `value_at_percentile(f64)` method is unchanged.
+Measured with [**criterion**](https://github.com/bheisler/criterion.rs) on
+100,000 events per workload, using the release profile on an Apple M-series
+machine. Criterion's default measurement configuration was used. The exact
+machine, operating-system, compiler, and Criterion output are not recorded,
+so these results are illustrative rather than guaranteed. Only the
+integer-based percentile methods are affected; the generic
+`value_at_percentile(f64)` method is unchanged.
+
+Run the benchmark in the release profile with
+`cargo bench --bench histogram --release`, then repeat with
+`--features binary-scaling` to reproduce the comparison.
 
 | Method | Default | `binary-scaling` | Improvement |
 |---|---:|---:|---:|
@@ -252,12 +268,15 @@ Defect reports, feature requests, and pull requests are welcome on https://githu
 
 **p99.Rust** has no (non-development) dependencies.
 
-#### Dev Dependencies
+#### Development Dependencies
 
 Crates upon which **p99.Rust** has development dependencies:
 
 * [**criterion**](https://github.com/bheisler/criterion.rs);
 * [**test_help-rs**](https://github.com/synesissoftware/test_help-rs);
+
+**Cargo.lock** is retained so local and CI validation use a reproducible
+dependency graph. Commands that consume the lockfile use `--locked`.
 
 
 ### License

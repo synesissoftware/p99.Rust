@@ -1,9 +1,9 @@
-# p99.Rust Examples <!-- omit it toc -->
+# p99.Rust - Examples <!-- omit in toc -->
 
 
 |Name|Source & Description|Summary|
 |---|---|---|
-|**build_histogram**|[examples/build_histogram/main.rs](/examples/build_histogram/main.rs)<br/>[examples/build_histogram.md](/examples/build_histogram.md)|Lists files in the current directory whose paths match one or more shell wildcard pattern(s), using `shwild::matches()`.|
+|**build_histogram**|[examples/build_histogram.rs](./examples/build_histogram.rs)|Builds a `Histogram` from simulated event delays and displays its recorded statistics and approximated percentiles.|
 
 
 <!-- ########################### end of file ########################### -->

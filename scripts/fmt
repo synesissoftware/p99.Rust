@@ -1,0 +1,13 @@
+#! /usr/bin/env bash
+set -euo pipefail
+
+RUSTFMT_TOOLCHAIN="${RUSTFMT_TOOLCHAIN:-nightly-2026-08-08}"
+RUSTFMT="$(rustup which --toolchain "${RUSTFMT_TOOLCHAIN}" rustfmt 2>/dev/null || true)"
+if [[ -z "${RUSTFMT}" ]]; then
+	echo "error: ${RUSTFMT_TOOLCHAIN} rustfmt is required (see rustfmt.toml)" >&2
+	echo "  rustup toolchain install ${RUSTFMT_TOOLCHAIN} --component rustfmt" >&2
+	exit 1
+fi
+
+export RUSTFMT
+exec cargo fmt -- --unstable-features "$@"

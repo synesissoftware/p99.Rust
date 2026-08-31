@@ -1,4 +1,4 @@
-# p99.Rust CHANGES <!-- omit in toc -->
+# p99.Rust - Changes <!-- omit in toc -->
 
 
 ## 0.0.3 - 14th July 2026
