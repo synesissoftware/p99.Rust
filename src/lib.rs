@@ -258,6 +258,7 @@ impl Histogram {
     /// # Return
     /// Returns `Some(value_in_ns)` if the histogram contains one or more
     /// events; otherwise, returns `None`.
+    #[allow(clippy::identity_op)] // this to have the consistent `* 1`
     #[inline(always)]
     pub fn value_at_p50(&self) -> Option<u64> {
         let target_rank = (self.event_count as u128 * 1) / 2;
