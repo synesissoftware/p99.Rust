@@ -86,13 +86,13 @@ benchmark are reported below.
 Reference the current release in **Cargo.toml** in the usual way:
 
 ```toml
-p99 = { version = "0.0.3" }
+p99 = { version = "0.0.4" }
 ```
 
 To enable the optional binary-scaling optimization:
 
 ```toml
-p99 = { version = "0.0.3", features = ["binary-scaling"] }
+p99 = { version = "0.0.4", features = ["binary-scaling"] }
 ```
 
 
@@ -123,7 +123,7 @@ Add the feature in your **Cargo.toml**:
 
 ```toml
 [dependencies]
-p99 = { version = "0.0.3", features = ["binary-scaling"] }
+p99 = { version = "0.0.4", features = ["binary-scaling"] }
 ```
 
 Or, when building from the command line:

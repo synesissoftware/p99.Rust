@@ -1,6 +1,16 @@
 # p99.Rust - Changes <!-- omit in toc -->
 
 
+## 0.0.4 - 31st August 2026
+
+* added canonical CI workflow **.github/workflows/ci.yml** with locked stable, feature, MSRV, Clippy, rustdoc, formatting, repository checker, example, and publish validation;
+* added complete Cargo metadata, docs.rs configuration, and Rust 1.74 MSRV declaration;
+* added pinned nightly formatter **scripts/fmt** and **DOC_76**, **RUST_TEST_NAMING**, and **DERIVE_LAYOUT** checkers;
+* clarified benchmark methodology and corrected README and example catalogue documentation;
+* aligned development dependency versions and retained a Rust 1.74-compatible **Cargo.lock**;
+* applied warning-free lint cleanup without changing public API or histogram behaviour;
+
+
 ## 0.0.3 - 14th July 2026
 
 * standardised project boilerplate: (**.gitattributes**, **.gitignore**, **.vimrc**, **.vscode/settings.json**); project files (**CHANGES.md**, **EXAMPLES.md**, **NEWS.md**, **README.md**, **TODO.md**);
