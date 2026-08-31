@@ -2,9 +2,15 @@ name: Rust
 
 on:
   push:
-    branches: [ "master", "dev", "gha" ]
+    branches:
+      - master
+      - dev
+      - boilerplate
+      - idiomatic
+      - rc1
+      - rc2
+      - rc3
   pull_request:
-    branches: [ "master", "dev", "gha" ]
 
 env:
   CARGO_TERM_COLOR: always
