@@ -1,0 +1,85 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+      - boilerplate
+      - idiomatic
+      - rc1
+      - rc2
+      - rc3
+  pull_request:
+
+permissions:
+  contents: read
+
+defaults:
+  run:
+    shell: bash
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  check:
+    name: Stable checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Install pinned nightly rustfmt
+        run: rustup toolchain install nightly-2026-08-08 --profile minimal --component rustfmt
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: cargo test (all targets)
+        run: cargo test --all-targets --locked
+
+      - name: cargo test (no default features)
+        run: cargo test --no-default-features --locked
+
+      - name: cargo test (binary scaling)
+        run: cargo test --features binary-scaling --locked
+
+      - name: cargo clippy
+        run: cargo clippy --all-targets --locked -- -D warnings
+
+      - name: cargo doc
+        run: RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --locked
+
+      - name: rustfmt
+        run: RUSTUP_TOOLCHAIN=nightly-2026-08-08 ./scripts/fmt --check
+
+      - name: DOC_76 checker
+        run: python3 scripts/check_doc_76.py
+
+      - name: RUST_TEST_NAMING checker
+        run: python3 scripts/check_test_names.py
+
+      - name: DERIVE_LAYOUT checker
+        run: python3 scripts/check_derives.py
+
+      - name: cargo build (example)
+        run: cargo build --example build_histogram --locked
+
+      - name: cargo publish (dry run)
+        run: cargo publish --dry-run --locked
+
+  msrv:
+    name: MSRV (1.74)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dtolnay/rust-toolchain@1.74.0
+
+      - uses: Swatinem/rust-cache@v2
+
+      - name: cargo check (library)
+        run: cargo +1.74.0 check --lib --locked

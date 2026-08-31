@@ -10,14 +10,16 @@ use std::{
 };
 
 struct SimpleRng {
-    state: u64,
+    state : u64,
 }
 
 // API functions
 
 impl SimpleRng {
-    fn new(seed: u64) -> Self {
-        Self { state: seed }
+    fn new(seed : u64) -> Self {
+        Self {
+            state : seed
+        }
     }
 }
 
@@ -35,24 +37,31 @@ impl SimpleRng {
 
 fn main() {
     let range = match std_env::var("P99_RANGE") {
-        Ok(val) => match val.parse::<usize>() {
-            Ok(num) => num,
-            Err(_) => {
-                eprintln!("Warning: failed to parse P99_RANGE value '{}', defaulting to 1,000,000", val);
+        Ok(val) => {
+            match val.parse::<usize>() {
+                Ok(num) => num,
+                Err(_) => {
+                    eprintln!(
+                        "Warning: failed to parse P99_RANGE value '{}', defaulting to 1,000,000",
+                        val
+                    );
 
-                1_000_000
-            },
+                    1_000_000
+                },
+            }
         },
         Err(_) => 1_000_000,
     };
     let tries = match std_env::var("P99_TRIES") {
-        Ok(val) => match val.parse::<usize>() {
-            Ok(num) => num,
-            Err(_) => {
-                eprintln!("Warning: failed to parse P99_TRIES value '{}', defaulting to 100", val);
+        Ok(val) => {
+            match val.parse::<usize>() {
+                Ok(num) => num,
+                Err(_) => {
+                    eprintln!("Warning: failed to parse P99_TRIES value '{}', defaulting to 100", val);
 
-                100
-            },
+                    100
+                },
+            }
         },
         Err(_) => 100,
     };
@@ -68,13 +77,11 @@ fn main() {
         let start = std_time::Instant::now();
 
         if delay_ns < 1_000_000 {
-
             let busy_wait_start = std_time::Instant::now();
             while busy_wait_start.elapsed().as_nanos() < delay_ns as u128 {
                 std::hint::black_box(1);
             }
         } else {
-
             std_thread::sleep(std_time::Duration::from_micros(delay_ns));
         }
 

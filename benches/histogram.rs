@@ -41,14 +41,14 @@ fn build_wide_range_histogram() -> Histogram {
 }
 
 fn bench_percentile_comparison<F>(
-    c: &mut Criterion,
-    h: &Histogram,
-    percentile_name: &str,
-    workload_name: &str,
-    float_val: f64,
-    int_method: F,
+    c : &mut Criterion,
+    h : &Histogram,
+    percentile_name : &str,
+    workload_name : &str,
+    float_val : f64,
+    int_method : F,
 ) where
-    F: Fn(&Histogram) -> Option<u64> + Copy,
+    F : Fn(&Histogram) -> Option<u64> + Copy,
 {
     let float_str = if float_val.fract() == 0.0 {
         format!("{:.1}", float_val)
@@ -73,8 +73,8 @@ fn bench_percentile_comparison<F>(
 
 // Benchmarks
 
-fn BENCHMARK_bucket_index_SMALL(c: &mut Criterion) {
-    let id = format!("`Histogram::bucket_index(1)`");
+fn BENCHMARK_bucket_index_SMALL(c : &mut Criterion) {
+    let id = "`Histogram::bucket_index(1)`".to_string();
 
     c.bench_function(&id, |b| {
         b.iter(|| {
@@ -85,8 +85,8 @@ fn BENCHMARK_bucket_index_SMALL(c: &mut Criterion) {
     });
 }
 
-fn BENCHMARK_bucket_index_LARGE(c: &mut Criterion) {
-    let id = format!("`Histogram::bucket_index(u64::MAX)`");
+fn BENCHMARK_bucket_index_LARGE(c : &mut Criterion) {
+    let id = "`Histogram::bucket_index(u64::MAX)`".to_string();
 
     c.bench_function(&id, |b| {
         b.iter(|| {
@@ -97,12 +97,12 @@ fn BENCHMARK_bucket_index_LARGE(c: &mut Criterion) {
     });
 }
 
-fn BENCHMARK_push_event_time_ns(c: &mut Criterion) {
-    let id = format!("`Histogram::push_event_time_ns()`");
+fn BENCHMARK_push_event_time_ns(c : &mut Criterion) {
+    let id = "`Histogram::push_event_time_ns()`".to_string();
 
     c.bench_function(&id, |b| {
         b.iter_batched_ref(
-            || Histogram::default(),
+            Histogram::default,
             |h| {
                 std_hint::black_box(h.push_event_time_ns(std_hint::black_box(12_345)));
             },
@@ -111,8 +111,8 @@ fn BENCHMARK_push_event_time_ns(c: &mut Criterion) {
     });
 }
 
-fn BENCHMARK_clear(c: &mut Criterion) {
-    let id = format!("`Histogram::clear()`");
+fn BENCHMARK_clear(c : &mut Criterion) {
+    let id = "`Histogram::clear()`".to_string();
 
     c.bench_function(&id, |b| {
         b.iter_batched_ref(
@@ -124,14 +124,15 @@ fn BENCHMARK_clear(c: &mut Criterion) {
                 h
             },
             |h| {
-                std_hint::black_box(h.clear());
+                h.clear();
+                std_hint::black_box(h);
             },
             BatchSize::SmallInput,
         )
     });
 }
 
-fn BENCHMARK_percentile_queries(c: &mut Criterion) {
+fn BENCHMARK_percentile_queries(c : &mut Criterion) {
     // 1. Benchmark under dense sequential 100k events
     let seq_h = build_sequential_histogram();
     bench_percentile_comparison(c, &seq_h, "99", "100k events", 99.0, |h| h.value_at_p99());

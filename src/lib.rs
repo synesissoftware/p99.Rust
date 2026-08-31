@@ -14,15 +14,15 @@ use std::{
 /// and suited for high-frequency low-overhead timing measurements.
 #[derive(Clone)]
 pub struct Histogram {
-    event_count: usize,
+    event_count : usize,
 
-    event_time_total: u64,
-    has_overflowed: bool,
+    event_time_total : u64,
+    has_overflowed :   bool,
 
-    min_event_time: Option<u64>,
-    max_event_time: Option<u64>,
+    min_event_time : Option<u64>,
+    max_event_time : Option<u64>,
 
-    buckets: [u64; 64],
+    buckets : [u64; 64],
 }
 
 // API functions
@@ -47,15 +47,15 @@ impl Histogram {
     /// `u64`.
     pub fn push_event_duration(
         &mut self,
-        duration: std_time::Duration,
+        duration : std_time::Duration,
     ) -> bool {
-        return self.push_event_time_ns(duration.as_nanos() as u64);
+        self.push_event_time_ns(duration.as_nanos() as u64)
     }
 
     /// Pushes an event with the given number of nanoseconds.
     pub fn push_event_time_ns(
         &mut self,
-        time_in_ns: u64,
+        time_in_ns : u64,
     ) -> bool {
         if self.try_add_ns_to_total_and_update_minmax_and_count_(time_in_ns) {
             self.event_count += 1;
@@ -72,12 +72,10 @@ impl Histogram {
     /// Pushes an event with the given number of microseconds.
     pub fn push_event_time_us(
         &mut self,
-        time_in_us: u64,
+        time_in_us : u64,
     ) -> bool {
         if let Some(time_in_ns) = time_in_us.checked_mul(1_000) {
-            let r = self.push_event_time_ns(time_in_ns);
-
-            r
+            self.push_event_time_ns(time_in_ns)
         } else {
             self.has_overflowed = true;
 
@@ -88,12 +86,10 @@ impl Histogram {
     /// Pushes an event with the given number of milliseconds.
     pub fn push_event_time_ms(
         &mut self,
-        time_in_ms: u64,
+        time_in_ms : u64,
     ) -> bool {
         if let Some(time_in_ns) = time_in_ms.checked_mul(1_000_000) {
-            let r = self.push_event_time_ns(time_in_ns);
-
-            r
+            self.push_event_time_ns(time_in_ns)
         } else {
             self.has_overflowed = true;
 
@@ -104,12 +100,10 @@ impl Histogram {
     /// Pushes an event with the given number of seconds.
     pub fn push_event_time_s(
         &mut self,
-        time_in_s: u64,
+        time_in_s : u64,
     ) -> bool {
         if let Some(time_in_ns) = time_in_s.checked_mul(1_000_000_000) {
-            let r = self.push_event_time_ns(time_in_ns);
-
-            r
+            self.push_event_time_ns(time_in_ns)
         } else {
             self.has_overflowed = true;
 
@@ -124,7 +118,7 @@ impl Histogram {
     /// Returns the count of events in a specific bucket.
     pub fn bucket_value(
         &self,
-        index: usize,
+        index : usize,
     ) -> Option<u64> {
         if index < 64 {
             Some(self.buckets[index])
@@ -143,7 +137,8 @@ impl Histogram {
         self.event_count
     }
 
-    /// Returns the total event time in nanoseconds, if no overflow occurred.
+    /// Returns the total event time in nanoseconds, if no overflow
+    /// occurred.
     pub fn event_time_total(&self) -> Option<u64> {
         if self.has_overflowed {
             None
@@ -186,7 +181,7 @@ impl Histogram {
     /// events; otherwise, returns `None`.
     pub fn value_at_percentile(
         &self,
-        percentile: f64,
+        percentile : f64,
     ) -> Option<u64> {
         if self.event_count == 0 {
             return None;
@@ -254,9 +249,7 @@ impl Histogram {
             }
         }
 
-        let r = self.max_event_time;
-
-        r
+        self.max_event_time
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 50th
@@ -268,9 +261,8 @@ impl Histogram {
     #[inline(always)]
     pub fn value_at_p50(&self) -> Option<u64> {
         let target_rank = (self.event_count as u128 * 1) / 2;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
 
-        r
+        self.value_at_target_rank_impl(target_rank as u64)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 75th
@@ -282,9 +274,8 @@ impl Histogram {
     #[inline(always)]
     pub fn value_at_p75(&self) -> Option<u64> {
         let target_rank = (self.event_count as u128 * 3) / 4;
-        let r = self.value_at_target_rank_impl(target_rank as u64);
 
-        r
+        self.value_at_target_rank_impl(target_rank as u64)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 90th
@@ -301,9 +292,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 90) / 100) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 95th
@@ -320,9 +309,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 95) / 100) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 99th
@@ -339,9 +326,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 99) / 100) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 99.5th
@@ -358,9 +343,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 995) / 1_000) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 99.9th
@@ -377,9 +360,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 999) / 1_000) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 99.99th
@@ -396,9 +377,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 9_999) / 10_000) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 99.999th
@@ -415,9 +394,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 99_999) / 100_000) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 
     /// Returns the approximated duration (in nanoseconds) at the 99.9999th
@@ -434,9 +411,7 @@ impl Histogram {
         #[cfg(not(feature = "binary-scaling"))]
         let target_rank = ((self.event_count as u128 * 999_999) / 1_000_000) as u64;
 
-        let r = self.value_at_target_rank_impl(target_rank);
-
-        r
+        self.value_at_target_rank_impl(target_rank)
     }
 }
 
@@ -445,21 +420,21 @@ impl Histogram {
 impl std_fmt::Debug for Histogram {
     fn fmt(
         &self,
-        f: &mut std_fmt::Formatter<'_>,
+        f : &mut std_fmt::Formatter<'_>,
     ) -> std_fmt::Result {
         struct BucketsDebug<'a>(&'a [u64; 64], bool);
 
         impl std_fmt::Debug for BucketsDebug<'_> {
             fn fmt(
                 &self,
-                f: &mut std_fmt::Formatter<'_>,
+                f : &mut std_fmt::Formatter<'_>,
             ) -> std_fmt::Result {
                 struct PowerOfTwoKey(usize);
 
                 impl std_fmt::Debug for PowerOfTwoKey {
                     fn fmt(
                         &self,
-                        f: &mut std_fmt::Formatter<'_>,
+                        f : &mut std_fmt::Formatter<'_>,
                     ) -> std_fmt::Result {
                         write!(f, "\"2^{}\"", self.0)
                     }
@@ -504,12 +479,12 @@ impl std_fmt::Debug for Histogram {
 impl Default for Histogram {
     fn default() -> Self {
         Self {
-            event_count: 0,
-            event_time_total: 0,
-            has_overflowed: false,
-            min_event_time: None,
-            max_event_time: None,
-            buckets: [0; 64],
+            event_count :      0,
+            event_time_total : 0,
+            has_overflowed :   false,
+            min_event_time :   None,
+            max_event_time :   None,
+            buckets :          [0; 64],
         }
     }
 }
@@ -532,7 +507,7 @@ impl Histogram {
     /// `leading_zeros()` instruction, avoiding loop and branching logic.
     #[doc(hidden)]
     #[inline]
-    pub fn bucket_index(time_in_ns: u64) -> usize {
+    pub fn bucket_index(time_in_ns : u64) -> usize {
         if time_in_ns <= 1 {
             0
         } else {
@@ -546,7 +521,7 @@ impl Histogram {
     /// - Index `0` represents `[0, 1]` nanoseconds;
     /// - Any index `i` from `1` to `63` represents `[2^i, 2^(i+1) - 1]`;
     #[doc(hidden)]
-    pub fn bucket_range(index: usize) -> Option<(u64, u64)> {
+    pub fn bucket_range(index : usize) -> Option<(u64, u64)> {
         if index >= 64 {
             None
         } else if index == 0 {
@@ -565,7 +540,7 @@ impl Histogram {
 
     fn try_add_ns_to_total_and_update_minmax_and_count_(
         &mut self,
-        time_in_ns: u64,
+        time_in_ns : u64,
     ) -> bool {
         if self.has_overflowed {
             return false;
@@ -609,7 +584,7 @@ impl Histogram {
 
     fn value_at_target_rank_impl(
         &self,
-        target_rank: u64,
+        target_rank : u64,
     ) -> Option<u64> {
         if self.event_count == 0 {
             return None;
@@ -670,9 +645,7 @@ impl Histogram {
             }
         }
 
-        let r = self.max_event_time;
-
-        r
+        self.max_event_time
     }
 }
 
@@ -701,7 +674,6 @@ mod tests {
 
     #[test]
     fn TEST_Histogram_Debug() {
-
         // empty
         {
             let h = Histogram::default();
@@ -726,7 +698,6 @@ mod tests {
 
     #[test]
     fn TEST_Histogram_Debug_alternate() {
-
         // empty
         {
             let h = Histogram::default();
