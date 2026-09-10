@@ -59,6 +59,10 @@ harness = false
 name = "build_histogram"
 path = "examples/build_histogram.rs"
 
+[[example]]
+name = "versions"
+path = "examples/versions/main.rs"
+
 
 # ##########################################################
 # Features
