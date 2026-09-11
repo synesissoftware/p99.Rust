@@ -33,9 +33,6 @@ jobs:
         with:
           components: clippy
 
-      - name: Install pinned nightly rustfmt
-        run: rustup toolchain install nightly-2026-08-08 --profile minimal --component rustfmt
-
       - uses: Swatinem/rust-cache@v2
 
       - name: cargo test (all targets)
@@ -53,8 +50,14 @@ jobs:
       - name: cargo doc
         run: RUSTDOCFLAGS="-D warnings" cargo doc --no-deps --locked
 
+      - name: Install pinned nightly rustfmt
+        run: rustup toolchain install nightly-2026-09-10 --profile minimal --component rustfmt
+
       - name: rustfmt
-        run: RUSTUP_TOOLCHAIN=nightly-2026-08-08 ./scripts/fmt --check
+        env:
+          RUSTFMT_TOOLCHAIN: nightly-2026-09-10
+          RUSTUP_TOOLCHAIN: nightly-2026-09-10
+        run: ./scripts/fmt --check
 
       - name: DOC_76 checker
         run: python3 scripts/check_doc_76.py
@@ -64,6 +67,9 @@ jobs:
 
       - name: DERIVE_LAYOUT checker
         run: python3 scripts/check_derives.py
+
+      - name: cargo build (examples)
+        run: cargo build --examples --locked
 
       - name: cargo build (example)
         run: cargo build --example build_histogram --locked
@@ -82,4 +88,4 @@ jobs:
       - uses: Swatinem/rust-cache@v2
 
       - name: cargo check (library)
-        run: cargo +1.74.0 check --lib --locked
+        run: cargo check --lib --locked

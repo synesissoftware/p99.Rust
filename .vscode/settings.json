@@ -53,5 +53,12 @@
 	"rust-analyzer.debug.engine": "vadimcn.vscode-lldb",
 	"rust-analyzer.debug.openDebugPane": true,
 	"rust-analyzer.procMacro.enable": true,
+	"rust-analyzer.rustfmt.overrideCommand": [
+		"rustup",
+		"run",
+		"nightly-2026-09-10",
+		"rustfmt",
+		"--unstable-features",
+	],
 	"rust-analyzer.showUnlinkedFileNotification": false,
 }
