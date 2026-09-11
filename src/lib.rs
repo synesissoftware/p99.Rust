@@ -1,3 +1,58 @@
+//! Low-cost performance percentile histograms for Rust.
+//!
+//! **p99** provides [`Histogram`], a fixed-size histogram with 64
+//! logarithmic power-of-two buckets. It records event durations and
+//! approximates percentile values without retaining every observation.
+//!
+//! # Installation
+//!
+//! Reference the crate in **Cargo.toml** in the usual way:
+//!
+//! ```toml
+//! p99 = { version = "0.0.4" }
+//! ```
+//!
+//! Enable the optional `binary-scaling` feature to use fixed-point
+//! arithmetic when calculating the target rank for integer percentiles:
+//!
+//! ```toml
+//! p99 = { version = "0.0.4", features = ["binary-scaling"] }
+//! ```
+//!
+//! # Components
+//!
+//! ## [`Histogram`]
+//!
+//! A histogram accepts durations as [`std::time::Duration`] values or as
+//! integer counts in nanoseconds, microseconds, milliseconds, or seconds.
+//! It supports clearing the measurements, reading counts and minimum,
+//! maximum, and total duration values, and checking for arithmetic
+//! overflow.
+//!
+//! Percentiles are approximated by interpolating within the matching
+//! logarithmic bucket. The generic [`Histogram::value_at_percentile`]
+//! method accepts a percentage from `0.0` through `100.0`; convenience
+//! methods provide p50, p75, p90, p95, p99, p99.5, p99.9, p99.99,
+//! p99.999, and p99.9999.
+//!
+//! # Examples
+//!
+//! ```rust
+//! use p99::Histogram;
+//! use std::time::Duration;
+//!
+//! let mut histogram = Histogram::default();
+//! histogram.push_event_duration(Duration::from_micros(5));
+//! histogram.push_event_time_ns(150);
+//!
+//! assert_eq!(2, histogram.event_count());
+//! assert_eq!(Some(150), histogram.min_event_time());
+//! assert!(histogram.value_at_p99().is_some());
+//! ```
+//!
+//! See the project [README](https://github.com/synesissoftware/p99.Rust)
+//! for further information.
+
 // src/lib.rs : `Histogram`
 
 #[rustfmt::skip]
