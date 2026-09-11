@@ -40,18 +40,18 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "base-traits"
-version = "0.1.4"
+version = "0.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "69068402cce0b92d771a83fb17d617a975ce1b8122968fdd025e1ed6c7bd0d5e"
+checksum = "febda1e6bd75ec4a0680596f5d8689bbc391c3213607d286ab711f3b8b091ee1"
 dependencies = [
  "bt-rs",
 ]
 
 [[package]]
 name = "bt-rs"
-version = "0.0.3"
+version = "0.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "66c801a3e540d22c99661706133db245edae489c872cfdb2f5925b2077170285"
+checksum = "5b33a0644862185265eb4bee9b1679c1ae36f8258c000f3f482210acd95f7d70"
 
 [[package]]
 name = "cast"
@@ -233,7 +233,7 @@ checksum = "d6790f58c7ff633d8771f42965289203411a5e5c68388703c06e14f24770b41e"
 
 [[package]]
 name = "p99"
-version = "0.0.4"
+version = "0.0.5"
 dependencies = [
  "criterion",
  "test_help-rs",
@@ -378,9 +378,9 @@ dependencies = [
 
 [[package]]
 name = "test_help-rs"
-version = "0.2.1"
+version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2279bf04d9491e2b3bcd59cbc12eb9d7ac914c81290c8e54cdc92225dbb52cbb"
+checksum = "1fbd2a2dbea40fe948ff30aab06e73ecf79ff443ec01d38dc16ed9a28e1a4847"
 dependencies = [
  "base-traits",
  "bt-rs",

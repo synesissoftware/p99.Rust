@@ -1,6 +1,15 @@
 # p99.Rust - Changes <!-- omit in toc -->
 
 
+## 0.0.5 - 12th September 2026
+
+* added crate-level documentation describing the histogram API, percentile calculations, installation, and examples;
+* added the **versions** example and expanded example-build and package validation;
+* refreshed pinned-nightly formatting, repository checkers, editor configuration, and package metadata;
+* documented the MSRV and enabled complete docs.rs feature coverage;
+* updated **base-traits**, **criterion**, and **test_help-rs** to current compatible releases;
+
+
 ## 0.0.4 - 31st August 2026
 
 * added canonical CI workflow **.github/workflows/ci.yml** with locked stable, feature, MSRV, Clippy, rustdoc, formatting, repository checker, example, and publish validation;
