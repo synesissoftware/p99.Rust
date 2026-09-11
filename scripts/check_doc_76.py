@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 Verify DOC_76: public documentation comment lines are at most 76 characters.
 

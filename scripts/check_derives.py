@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 Verify DERIVE_LAYOUT: multi-trait `#[derive(...)]` macros must be split
 into separate single-trait lines, ordered alphabetically by trait name,

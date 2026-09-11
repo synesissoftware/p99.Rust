@@ -1,3 +1,4 @@
+
 # ##########################################################
 # Package
 
@@ -11,9 +12,18 @@ categories = [
 	"algorithms",
 	"development-tools::profiling",
 ]
-description = "Low-cost generation of performance percentiles (p50, p90, p99, etc.)"
+description = "Low-cost generation of performance percentiles (p50, p90, p99, etc.) (for Rust)"
 documentation = "https://docs.rs/p99"
 edition = "2021"
+exclude = [
+	".cargo",
+	".cursor",
+	".github",
+	".vimrc",
+	".vscode",
+	"scripts",
+	"target",
+]
 homepage = "https://github.com/synesissoftware/p99.Rust"
 keywords = [
 	"latency",
@@ -26,7 +36,9 @@ name = "p99"
 readme = "README.md"
 repository = "https://github.com/synesissoftware/p99.Rust"
 rust-version = "1.74"
-version = "0.0.4"
+version = "0.0.5"
+
+# docs.rs builds with all features enabled (including binary-scaling).
 
 [package.metadata.docs.rs]
 all-features = true
@@ -47,6 +59,10 @@ harness = false
 name = "build_histogram"
 path = "examples/build_histogram.rs"
 
+[[example]]
+name = "versions"
+path = "examples/versions/main.rs"
+
 
 # ##########################################################
 # Features
@@ -58,9 +74,12 @@ default = [
 
 # General features:
 #
+# - "_NEVER_TO_BE_ENABLED" - this is a placeholder feature and must NEVER be specified;
 # - "null-feature" - a feature that has no effect (and, thus, is useful for simplifying driver scripts);
 
+_NEVER_TO_BE_ENABLED = []
 null-feature = []
+
 
 # Crate-specific features:
 #
@@ -74,8 +93,9 @@ binary-scaling = [
 # ##########################################################
 # Dependencies
 
-[dependencies]
+[build-dependencies]
 
+[dependencies]
 
 [dev-dependencies]
 
@@ -83,9 +103,9 @@ binary-scaling = [
 #
 
 criterion = { version = "0.8", default-features = false, features = [
-] }
-test_help-rs = { version = "0.2.1", default-features = false, features = [
-] }
+]}
+test_help-rs = { version = "0.2", default-features = false, features = [
+]}
 
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
