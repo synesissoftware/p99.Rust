@@ -1,3 +1,4 @@
+#! /usr/bin/env python3
 """
 Verify RUST_TEST_NAMING: test functions and test modules use TEST_ prefix
 and SHOUTING_SNAKE_CASE, except words that name a specific Rust construct
